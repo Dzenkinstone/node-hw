@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = {
   postContactValidation: (req, res, next) => {
     const schema = Joi.object({
-      name: Joi.string().alphanum().required(),
+      name: Joi.string().required(),
       email: Joi.string().required(),
       phone: Joi.string().alphanum().required(),
     });
@@ -27,7 +27,7 @@ module.exports = {
     }
 
     const schema = Joi.object({
-      name: Joi.string().alphanum(),
+      name: Joi.string().required(),
       email: Joi.string(),
       phone: Joi.string().alphanum(),
     });
@@ -38,6 +38,20 @@ module.exports = {
       return res.json(400, {
         message: validationResult.error.details[0].message,
       });
+    }
+
+    next();
+  },
+
+  patchContactValidation: (req, res, next) => {
+    const schema = Joi.object({
+      favorite: Joi.boolean().required(),
+    });
+
+    const validationResult = schema.validate(req.body);
+
+    if (validationResult.error) {
+      return res.json(400, { message: "missing field favorite" });
     }
 
     next();
