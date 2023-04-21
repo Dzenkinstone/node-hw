@@ -4,8 +4,8 @@ module.exports = {
   postContactValidation: (req, res, next) => {
     const schema = Joi.object({
       name: Joi.string().required(),
-      email: Joi.string(),
-      phone: Joi.string().alphanum(),
+      email: Joi.string().required(),
+      phone: Joi.string().alphanum().required(),
     });
 
     const validationResult = schema.validate(req.body);
