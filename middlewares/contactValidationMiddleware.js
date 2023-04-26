@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = {
   postContactValidation: (req, res, next) => {
     const schema = Joi.object({
-      name: Joi.string().alphanum().required(),
+      name: Joi.string().required(),
       email: Joi.string().required(),
       phone: Joi.string().alphanum().required(),
     });
@@ -11,10 +11,8 @@ module.exports = {
     const validationResult = schema.validate(req.body);
 
     if (validationResult.error) {
-      const emptyColumns = validationResult.error.details[0].path;
-
       return res.json(400, {
-        message: `missing required ${emptyColumns.join()} field`,
+        message: `${validationResult.error.message}`,
       });
     }
 
@@ -27,9 +25,25 @@ module.exports = {
     }
 
     const schema = Joi.object({
-      name: Joi.string().alphanum(),
+      name: Joi.string().required(),
       email: Joi.string(),
       phone: Joi.string().alphanum(),
+    });
+
+    const validationResult = schema.validate(req.body);
+
+    if (validationResult.error) {
+      return res.json(400, {
+        message: validationResult.error.details[0].message,
+      });
+    }
+
+    next();
+  },
+
+  patchValidation: (req, res, next) => {
+    const schema = Joi.object({
+      favorite: Joi.boolean().required(),
     });
 
     const validationResult = schema.validate(req.body);
