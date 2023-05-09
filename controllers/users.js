@@ -45,7 +45,7 @@ const register = async (req, res, next) => {
 
 const verifyEmail = async (req, res, next) => {
   const { verificationToken } = req.params;
-  const user = User.findOne({ verificationToken });
+  const user = await User.findOne({ verificationToken });
 
   if (!user) {
     throw HttpError(404, "User not found");
@@ -97,7 +97,7 @@ const login = async (req, res, next) => {
   }
 
   if (!user.verify) {
-    throw HttpError(401, "Email or password is wrong");
+    throw HttpError(401, "Email is not verified");
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
