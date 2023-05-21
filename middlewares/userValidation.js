@@ -36,4 +36,20 @@ module.exports = {
 
     next();
   },
+
+  emailValidation: (req, res, next) => {
+    const schema = Joi.object({
+      email: Joi.string().pattern(emailRegexp).required(),
+    });
+
+    const validationResult = schema.validate(req.body);
+
+    if (validationResult.error) {
+      return res.json(400, {
+        message: validationResult.error.details[0].message,
+      });
+    }
+
+    next();
+  },
 };
